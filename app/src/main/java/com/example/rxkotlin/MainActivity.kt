@@ -1,13 +1,23 @@
 package com.example.rxkotlin
 
 import android.annotation.SuppressLint
+import android.app.DownloadManager
+import android.icu.util.TimeUnit
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Contacts
 import android.util.Log.d
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlin.concurrent.thread
+import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
     val tag = "jdfskhfjhfsd"
@@ -15,18 +25,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         init()
+        d(tag,"threadname: "+Thread.currentThread().name.toString())
+        jdkfsfhjhdjsID.setOnClickListener {
+
+
+        }
     }
 
 
 
-    private fun init(){
-        mainn()
+    private fun init() = runBlocking{
+        //mainn()
+        CPUtest.cpu()
+             //val ikako = async {CPUtest.cpuTestCoroutines()}
+        d(tag,"threadname: "+Thread.currentThread().name.toString())
 
 
 
+
+    }
+    private suspend fun setTextAfterDelay(seconds: Long, text: String) {
+        delay(seconds)
+        jdkfsfhjhdjsID.text = text
     }
     @SuppressLint("CheckResult")
     fun mainn() {
+        var counter = 0
+        val numberOfThreads = 1000
 
         val source2: Observable<Number> = listOf(
             NUMBERED,
@@ -82,8 +107,18 @@ class MainActivity : AppCompatActivity() {
         d(tag,Thread.currentThread().name.toString())
         d(tag,"\n --------- Example of: $String  --------")
         d(tag,Thread.currentThread().toString())
-        Thread.sleep(9000)
+        Thread.sleep(1000)
         d(tag,"\n --------- Example of: $String  --------")
 
+
+
+    val time = measureTimeMillis {
+        for (i in 1..numberOfThreads) {
+            thread() {
+                counter += 1
+            }
+        }
     }
+        d(tag,"Created ${numberOfThreads} threads $counter in ${time}ms.")
+}
 }
