@@ -2,6 +2,7 @@ package com.example.rxkotlin
 
 import android.util.Log.d
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
 val tag = "TestCpuSpeed"
@@ -12,9 +13,9 @@ object CPUtest {
     val numberOfThreads = 1_000_000
     val time = measureTimeMillis {
         for (i in 1..numberOfThreads) {
-            async{
+            launch {
                 counter += 1
-
+               // d(tag,"threadname: "+Thread.currentThread().name.toString())
             }
         }
     }
