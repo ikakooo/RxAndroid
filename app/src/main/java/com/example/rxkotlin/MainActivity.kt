@@ -1,11 +1,8 @@
 package com.example.rxkotlin
 
 import android.annotation.SuppressLint
-import android.app.DownloadManager
-import android.icu.util.TimeUnit
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Contacts
 import android.util.Log.d
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
@@ -13,7 +10,7 @@ import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
+
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
 
@@ -45,10 +42,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun corutineeee()=runBlocking {
-        val job= CoroutineScope(Job() + Dispatchers.IO)
+        corutinedefaut()
+        val jobb= CoroutineScope(Job() + Dispatchers.IO)
         d("ggggwerergg",Thread.currentThread().name.toString())
         d("ggggwerergg","from launch coroutine top")
-        job.launch {
+        jobb.launch {
             delay(7_000)
             d("ggggwerergg",Thread.currentThread().name.toString())
             d("ggggwerergg","from launch coroutine body")
@@ -59,16 +57,33 @@ class MainActivity : AppCompatActivity() {
 
 
         val time = measureTimeMillis {
-            val first = job.async { firstNumber() }
-            val second = job.async { secondNumber() }
-            val third = job.async { thirdNumber() }
+            val first = jobb.async { firstNumber() }
+            val second = jobb.async { secondNumber() }
+            val third = jobb.async { thirdNumber() }
 
-            //val result = first.await() + second.await() + third.await()
+            val result = first.await() + second.await() + third.await()
+            //val result = first.start()
+            d("ggggwerergg","isCancelled: " + second.isCancelled)
+            d("ggggwerergg","jobbisActive: " + jobb.isActive)
         }
 
        // println(time) //prints 7 seconds
         d("ggggwerergg","TimeEEE: " + time.toString())
        // job.cancel()
+    }
+
+    suspend fun corutinedefaut(){
+        d("ggggwererergg","current thread: ${Thread.currentThread().name}")
+
+        //switch to default Dispatcher
+        val result = withContext(Dispatchers.Default) {
+            delay(5000)
+            d("ggggwererergg","Thread: ${Thread.currentThread().name}")
+            100
+        }
+
+        d("ggggwererergg","result: $result")
+        d("ggggwererergg","back on: ${Thread.currentThread().name}")
     }
 
     private suspend fun firstNumber(): Int {
