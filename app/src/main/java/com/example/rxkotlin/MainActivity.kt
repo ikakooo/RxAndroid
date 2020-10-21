@@ -13,15 +13,17 @@ import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
     val tag = "jdfskhfjhfsd"
     override fun onCreate(savedInstanceState: Bundle?) {
+        init()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        init()
+
         d(tag,"threadname: "+Thread.currentThread().name.toString())
         jdkfsfhjhdjsID.setOnClickListener {
 
@@ -44,15 +46,46 @@ class MainActivity : AppCompatActivity() {
 
     fun corutineeee()=runBlocking {
         val job= CoroutineScope(Job() + Dispatchers.IO)
-        d("gegregrer","from launch coroutine top")
+        d("ggggwerergg",Thread.currentThread().name.toString())
+        d("ggggwerergg","from launch coroutine top")
         job.launch {
-            delay(10_000)
-            d("gegregrer","from launch coroutine body")
+            delay(7_000)
+            d("ggggwerergg",Thread.currentThread().name.toString())
+            d("ggggwerergg","from launch coroutine body")
         }
         //delay(5_000)
-        d("gegregrer","from runblocking")
+        d("ggggwerergg",Thread.currentThread().name.toString())
+        d("ggggwerergg","from runblocking")
+
+
+        val time = measureTimeMillis {
+            val first = job.async { firstNumber() }
+            val second = job.async { secondNumber() }
+            val third = job.async { thirdNumber() }
+
+            //val result = first.await() + second.await() + third.await()
+        }
+
+       // println(time) //prints 7 seconds
+        d("ggggwerergg","TimeEEE: " + time.toString())
+       // job.cancel()
     }
 
+    private suspend fun firstNumber(): Int {
+        delay(3_000) // 3 seconds delay
+        d("ggggwerergg",Thread.currentThread().name.toString()+" 3_000")
+        return 5
+    }
+    private suspend fun secondNumber(): Int {
+        delay(5_000) // 5 seconds delay
+        d("ggggwerergg",Thread.currentThread().name.toString()+" 5_000")
+        return 8
+    }
+    private suspend fun thirdNumber(): Int {
+        delay(7_000) // 7 seconds delay
+        d("ggggwerergg",Thread.currentThread().name.toString()+" 7_000")
+        return 10
+    }
     private suspend fun setTextAfterDelay(seconds: Long, text: String) {
         delay(seconds)
         jdkfsfhjhdjsID.text = text
