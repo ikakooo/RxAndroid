@@ -12,10 +12,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
 
@@ -34,16 +31,28 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    private fun init() = runBlocking{
+    private fun init() {
         //mainn()
-        CPUtest.cpu()
+       // CPUtest.cpu()
              //val ikako = async {CPUtest.cpuTestCoroutines()}
         d(tag,"threadname: "+Thread.currentThread().name.toString())
-
+        corutineeee()
 
 
 
     }
+
+    fun corutineeee()=runBlocking {
+        val job= CoroutineScope(Job() + Dispatchers.IO)
+        d("gegregrer","from launch coroutine top")
+        job.launch {
+            delay(10_000)
+            d("gegregrer","from launch coroutine body")
+        }
+        //delay(5_000)
+        d("gegregrer","from runblocking")
+    }
+
     private suspend fun setTextAfterDelay(seconds: Long, text: String) {
         delay(seconds)
         jdkfsfhjhdjsID.text = text
