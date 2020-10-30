@@ -1,15 +1,19 @@
-package com.example.rxkotlin
+package com.example.rxkotlin.ui
 
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log.d
+import com.example.rxkotlin.IKAKOO
+import com.example.rxkotlin.NUMBERED
+import com.example.rxkotlin.R
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
@@ -57,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val time = measureTimeMillis {
-            val first = jobb.async { firstNumber() }
+            val first = jobb.async(IO) { firstNumber() }
             val second = jobb.async { secondNumber() }
             val third = jobb.async { thirdNumber() }
 
